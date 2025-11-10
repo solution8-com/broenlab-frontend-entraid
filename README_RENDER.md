@@ -1,0 +1,55 @@
+Render deployment instructions
+=============================
+
+This repo contains a static `index.html` and a small Express server (`server.js`) that:
+
+- Serves the static `index.html` so client and server share the same origin.
+- Provides `/login` to validate credentials (checked against environment variables) and set an httpOnly session cookie.
+- Provides `/proxy/webhook` which proxies requests to the real n8n webhook URL, attaching Basic Auth using environment variables.
+
+This keeps your n8n credentials off the client and allows the chat widget to call `/proxy/webhook` as the webhook URL.
+
+Local testing
+-------------
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a `.env` file from `.env.example` and fill in values (do NOT commit `.env`):
+
+```bash
+cp .env.example .env
+# edit .env and replace JWT_SECRET with a secure random string
+```
+
+3. Start the server:
+
+```bash
+npm start
+```
+
+4. Visit `http://localhost:3000` in your browser. The login overlay in the app will POST to `/login` and the server will set an httpOnly cookie.
+
+Deploy to Render (Web Service)
+-----------------------------
+1. Push this repo to GitHub (or connect Render to your Git provider).
+2. In the Render dashboard, create a new "Web Service".
+   - Connect your repository.
+   - Root: the repo root where `server.js` and `package.json` are located.
+   - Build Command: (none required)
+   - Start Command: `npm start`
+3. In the Render service settings, add the following Environment Variables (from `.env.example`):
+   - `N8N_WEBHOOK_URL` (your real n8n webhook URL)
+   - `N8N_USERNAME` (the username)
+   - `N8N_PASSWORD` (the password)
+   - `JWT_SECRET` (long random string)
+
+4. Deploy. Render will run `npm start` and your app will serve the static site + endpoints on the same origin.
+
+Notes
+-----
+- Ensure `JWT_SECRET` is strong and never committed.
+- In production, Render serves TLS (HTTPS) automatically — session cookies are set with `secure: true` when NODE_ENV=production.
+- If you want purely serverless functions instead of a persistent web service, you can port the endpoints to Render's serverless Functions or Vercel/Netlify functions, but you must adapt paths and cookie handling accordingly.
