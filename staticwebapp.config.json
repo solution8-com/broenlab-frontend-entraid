@@ -12,13 +12,21 @@
   },
   "routes": [
     {
+      "route": "/index.html",
+      "redirect": "/chat.html"
+    },
+    {
+      "route": "/",
+      "redirect": "/chat.html"
+    },
+    {
       "route": "/*",
       "allowedRoles": ["authenticated"]
     }
   ],
   "responseOverrides": {
     "401": {
-      "redirect": "/.auth/login/aad",
+      "redirect": "/.auth/login/aad?post_login_redirect_uri=/chat.html",
       "statusCode": 302
     }
   }
