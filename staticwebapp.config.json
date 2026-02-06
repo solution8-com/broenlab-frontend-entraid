@@ -12,16 +12,16 @@
   },
   "routes": [
     {
-      "route": "/index.html",
-      "redirect": "/chat.html"
+      "route": "/.auth/*",
+      "allowedRoles": ["anonymous"]
     },
     {
-      "route": "/",
-      "redirect": "/chat.html"
+      "route": "/chat.html",
+      "allowedRoles": ["authenticated"]
     },
     {
       "route": "/*",
-      "allowedRoles": ["authenticated"]
+      "redirect": "/chat.html"
     }
   ],
   "responseOverrides": {
