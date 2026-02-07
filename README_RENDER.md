@@ -53,3 +53,5 @@ Notes
 - Ensure `JWT_SECRET` is strong and never committed.
 - In production, Render serves TLS (HTTPS) automatically — session cookies are set with `secure: true` when NODE_ENV=production.
 - If you want purely serverless functions instead of a persistent web service, you can port the endpoints to Render's serverless Functions or Vercel/Netlify functions, but you must adapt paths and cookie handling accordingly.
+
+  
